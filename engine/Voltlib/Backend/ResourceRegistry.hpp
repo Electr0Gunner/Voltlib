@@ -5,6 +5,16 @@
 
 namespace Volt
 {
+    enum ResRegError
+    {
+        ERR_NONE,
+        ERR_RES_FILE_NOT_FOUND,
+        ERR_INVALID_RES_FILE,
+        ERR_INVALID_ID,
+        ERR_IMAGE_NOT_FOUND,
+    };
+
+
     class Texture;
 
     class ResourceRegistry
@@ -15,6 +25,7 @@ namespace Volt
         ResourceRegistry(/* args */);
         ~ResourceRegistry();
 
+        ResRegError LoadResources(std::string resourceFilePath);
         Texture* GetTexture(std::string id);
     };
     

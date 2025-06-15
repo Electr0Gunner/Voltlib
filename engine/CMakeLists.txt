@@ -6,17 +6,19 @@ set(SDL_STATIC ON CACHE BOOL "" FORCE)
 set(SDL_SHARED OFF CACHE BOOL "" FORCE)
 
 file(GLOB_RECURSE ALL_FILES CONFIGURE_DEPENDS
-    "*.cpp" "*.c"
-    "*.h" "*.hpp"
+    "Voltlib/*.cpp" "Voltlib/*.c"
+    "Voltlib/*.h" "Voltlib/*.hpp"
 )
 
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        Voltlib
+        dependencies/misc
 )
 
+add_subdirectory(dependencies/SDL)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC 
 SDL3::SDL3-static
