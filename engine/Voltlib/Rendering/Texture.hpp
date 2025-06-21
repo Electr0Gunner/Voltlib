@@ -13,11 +13,11 @@ namespace Volt
     class Texture
     {
     private:
-        SDL_Texture* m_Texture;
+        SDL_Texture* rawTexture;
     public:
-        int m_Width;
-        int m_Height;
-        ScaleMode m_ScaleMode;
+        int width;
+        int height;
+        ScaleMode scaleMode;
 
     public:
         Texture(/* args */);

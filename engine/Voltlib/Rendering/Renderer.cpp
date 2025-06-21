@@ -4,24 +4,24 @@
 
 using namespace Volt;
 
-Renderer* Volt::g_Renderer = nullptr;
+Renderer* Renderer::s_Instance = nullptr;
 
 Renderer::Renderer(Window* window)
 {
-    g_Renderer = this;
+    s_Instance = this;
 
-    m_RenderBackend = window->m_Renderer;
-    m_WindowBackend = window->m_Window;
+    rendererBackend = window->renderer;
+    windowBackend = window->window;
 
     int w,h;
-    SDL_GetWindowSize(m_WindowBackend, &w, &h);
-    m_RenderBuffer = SDL_CreateTexture(m_RenderBackend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h);
-	SDL_SetTextureBlendMode(m_RenderBuffer, SDL_BLENDMODE_BLEND);
+    SDL_GetWindowSize(windowBackend, &w, &h);
+    renderBuffer = SDL_CreateTexture(rendererBackend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h);
+	SDL_SetTextureBlendMode(renderBuffer, SDL_BLENDMODE_BLEND);
 }
 
 Renderer::~Renderer()
 {
-    SDL_DestroyTexture(m_RenderBuffer);
+    SDL_DestroyTexture(renderBuffer);
 }
 
 
@@ -29,31 +29,31 @@ void Renderer::Render()
 {
 	g_ImGuiManager->Frame();
 
-	SDL_SetRenderTarget(m_RenderBackend, nullptr);
+	SDL_SetRenderTarget(rendererBackend, nullptr);
 
-	SDL_SetRenderDrawColor(m_RenderBackend, 0, 0, 0, 255);
-	SDL_RenderClear(m_RenderBackend);
-    SDL_RenderTexture(m_RenderBackend, m_RenderBuffer, nullptr, nullptr);
+	SDL_SetRenderDrawColor(rendererBackend, 0, 0, 0, 255);
+	SDL_RenderClear(rendererBackend);
+    SDL_RenderTexture(rendererBackend, renderBuffer, nullptr, nullptr);
 
     if (ImGui::GetDrawData() != nullptr)
-		ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), m_RenderBackend);
+		ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), rendererBackend);
 
-    SDL_RenderPresent(m_RenderBackend);
+    SDL_RenderPresent(rendererBackend);
 }
 
 SDL_Renderer* Renderer::GetRenderer()
 {
-    return m_RenderBackend;
+    return rendererBackend;
 }
 
 SDL_Window* Renderer::GetWindow()
 {
-    return m_WindowBackend;
+    return windowBackend;
 }
 
 void Renderer::Draw(RenderCommand command)
 {
-	SDL_SetRenderTarget(m_RenderBackend, m_RenderBuffer);
+	SDL_SetRenderTarget(rendererBackend, renderBuffer);
 
    // SDL_SetTextureColorMod( command.texture, command.color.r, command.color.g, command.color.b);
 	//SDL_SetTextureAlphaMod( command.texture, command.color.a);
@@ -76,39 +76,39 @@ void Renderer::Draw(RenderCommand command)
         additionalRotation = 180.0;
     }
 
-    SDL_SetRenderClipRect(m_RenderBackend, &clipRect);
-    SDL_RenderTextureRotated(m_RenderBackend, command.texture, &srcRect, &dstRect, command.rotation + additionalRotation, &centerPoint, flipMode);
-    SDL_SetRenderClipRect(m_RenderBackend, nullptr);
-	SDL_SetRenderTarget(m_RenderBackend, nullptr);
+    SDL_SetRenderClipRect(rendererBackend, &clipRect);
+    SDL_RenderTextureRotated(rendererBackend, command.texture, &srcRect, &dstRect, command.rotation + additionalRotation, &centerPoint, flipMode);
+    SDL_SetRenderClipRect(rendererBackend, nullptr);
+	SDL_SetRenderTarget(rendererBackend, nullptr);
 }
 
 void Renderer::DrawLine(LineCommand command)
 {
-	SDL_SetRenderTarget(m_RenderBackend, m_RenderBuffer);
+	SDL_SetRenderTarget(rendererBackend, renderBuffer);
 
     SDL_BlendMode oldBlendMode;
-    SDL_GetRenderDrawBlendMode(m_RenderBackend, &oldBlendMode);
-	SDL_SetRenderDrawBlendMode(m_RenderBackend, GetBlendMode(command.drawMode));
-    SDL_SetRenderDrawColor(m_RenderBackend, command.color.r, command.color.g, command.color.b, command.color.a);
-    SDL_RenderLine(m_RenderBackend, command.startPos.x, command.startPos.y, command.endPos.x, command.endPos.y);
-	SDL_SetRenderDrawBlendMode(m_RenderBackend, oldBlendMode);
-	SDL_SetRenderTarget(m_RenderBackend, nullptr);
+    SDL_GetRenderDrawBlendMode(rendererBackend, &oldBlendMode);
+	SDL_SetRenderDrawBlendMode(rendererBackend, GetBlendMode(command.drawMode));
+    SDL_SetRenderDrawColor(rendererBackend, command.color.r, command.color.g, command.color.b, command.color.a);
+    SDL_RenderLine(rendererBackend, command.startPos.x, command.startPos.y, command.endPos.x, command.endPos.y);
+	SDL_SetRenderDrawBlendMode(rendererBackend, oldBlendMode);
+	SDL_SetRenderTarget(rendererBackend, nullptr);
 }
 
 void Renderer::DrawRect(RectCommand command)
 {
-	SDL_SetRenderTarget(m_RenderBackend, m_RenderBuffer);
+	SDL_SetRenderTarget(rendererBackend, renderBuffer);
 
     SDL_FRect rect = {command.rect.x, command.rect.y, command.rect.width, command.rect.height};
 
     SDL_BlendMode oldBlendMode;
-    SDL_GetRenderDrawBlendMode(m_RenderBackend, &oldBlendMode);
-	SDL_SetRenderDrawBlendMode(m_RenderBackend, GetBlendMode(command.drawMode));
-    SDL_SetRenderDrawColor(m_RenderBackend, command.color.r, command.color.g, command.color.b, command.color.a);
+    SDL_GetRenderDrawBlendMode(rendererBackend, &oldBlendMode);
+	SDL_SetRenderDrawBlendMode(rendererBackend, GetBlendMode(command.drawMode));
+    SDL_SetRenderDrawColor(rendererBackend, command.color.r, command.color.g, command.color.b, command.color.a);
     if (command.fillIn)
-        SDL_RenderFillRect(m_RenderBackend, &rect);
+        SDL_RenderFillRect(rendererBackend, &rect);
     else
-        SDL_RenderRect(m_RenderBackend, &rect);
-	SDL_SetRenderDrawBlendMode(m_RenderBackend, oldBlendMode);
-	SDL_SetRenderTarget(m_RenderBackend, nullptr);
+        SDL_RenderRect(rendererBackend, &rect);
+	SDL_SetRenderDrawBlendMode(rendererBackend, oldBlendMode);
+	SDL_SetRenderTarget(rendererBackend, nullptr);
 }

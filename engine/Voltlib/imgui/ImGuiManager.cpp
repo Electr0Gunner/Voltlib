@@ -7,16 +7,16 @@ ImGuiManager* Volt::g_ImGuiManager = nullptr;
 
 bool demoWind = true;
 
-static std::vector<ImGuiWindowEntry> g_WindowList;
+static std::vector<ImGuiWindowEntry> windowList;
 
 void RegisterImGuiWindow(const char *name, bool *enabled, const ImGuiManager::WindowFunction &func)
 {
-	g_WindowList.push_back({name, enabled, func});
+	windowList.push_back({name, enabled, func});
 }
 
 void RegisterImGuiWindows()
 {
-	for (auto &entry : g_WindowList)
+	for (auto &entry : windowList)
 	{
 		if (entry.enabled && *entry.enabled)
 		{
@@ -31,8 +31,8 @@ ImGuiManager::ImGuiManager()
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 
-	ImGui_ImplSDL3_InitForSDLRenderer(g_Renderer->GetWindow(), g_Renderer->GetRenderer());
-	ImGui_ImplSDLRenderer3_Init(g_Renderer->GetRenderer());
+	ImGui_ImplSDL3_InitForSDLRenderer(Renderer::Instance()->GetWindow(), Renderer::Instance()->GetRenderer());
+	ImGui_ImplSDLRenderer3_Init(Renderer::Instance()->GetRenderer());
 }
 
 ImGuiManager::~ImGuiManager()
@@ -44,7 +44,7 @@ ImGuiManager::~ImGuiManager()
 
 void ImGuiManager::RenderAll(void)
 {
-	for (const auto &entry : g_WindowList)
+	for (const auto &entry : windowList)
 	{
 		if (entry.enabled && *entry.enabled)
 			entry.func();

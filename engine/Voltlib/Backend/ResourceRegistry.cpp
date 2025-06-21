@@ -3,6 +3,7 @@
 #include "Rendering/Renderer.hpp"
 #include "ImageLoader.hpp"
 #include <filesystem>
+#include "Debug/Debug.hpp"
 #include <fstream>
 #include <json.hpp>
 
@@ -16,17 +17,17 @@ ResourceRegistry::ResourceRegistry(/* args */)
     
 ResourceRegistry::~ResourceRegistry()
 {
-    for (const auto entry : m_TextureMap) {
+    for (const auto entry : textureMap) {
         delete entry.second;
     }
-    m_TextureMap.clear();
+    textureMap.clear();
 }
 
 Texture* ResourceRegistry::GetTexture(std::string id)
 {
     Texture* texture = nullptr;
 
-    for (const auto entry : m_TextureMap) {
+    for (const auto entry : textureMap) {
         if (entry.first == id)
             texture = entry.second;
     }
@@ -61,24 +62,23 @@ ResRegError ResourceRegistry::LoadResources(std::string resourceFilePath)
 
             SDL_PixelFormat pixelformat = img.channelCount == 4 ? SDL_PIXELFORMAT_RGBA32  : SDL_PIXELFORMAT_XRGB32;
             SDL_Surface* originSurface = SDL_CreateSurfaceFrom(img.w, img.h, pixelformat, img.pixels, img.w * 4);
-            SDL_Texture* sdl_texture = SDL_CreateTextureFromSurface(g_Renderer->GetRenderer(), originSurface);
-        
+            SDL_Texture* sdl_texture = SDL_CreateTextureFromSurface(Renderer::Instance()->GetRenderer(), originSurface);
             SDL_DestroySurface(originSurface);
 
             Texture* texture = new Texture();
 
             std::string filterMode = entry.value("filtering", "linear");
             if (filterMode == "linear")
-                texture->m_ScaleMode = FILTER_LINEAR;
+                texture->scaleMode = FILTER_LINEAR;
             else if (filterMode == "nearest")
-                texture->m_ScaleMode = FILTER_NEAREST;
+                texture->scaleMode = FILTER_NEAREST;
             else if (filterMode == "pixelart")
-                texture->m_ScaleMode = FILTER_PIXELART;
+                texture->scaleMode = FILTER_PIXELART;
 
 
             texture->SetTexture(sdl_texture);
 
-            m_TextureMap[id] = texture;
+            textureMap[id] = texture;
         }
 
     }

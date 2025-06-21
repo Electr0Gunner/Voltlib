@@ -9,8 +9,8 @@ namespace Volt
     {
     //VARIABLES
     public:
-        SDL_Window* m_Window;
-        SDL_Renderer* m_Renderer;
+        SDL_Window* window;
+        SDL_Renderer* renderer;
 
     //FUNCTIONS
     private:

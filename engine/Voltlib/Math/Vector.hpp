@@ -2,45 +2,46 @@
 
 namespace Volt
 {
-    class Vector2
+    class Vec2
     {
     public:
         float x, y;
     public:
-        Vector2(float x, float y): x(x), y(y) {};
+        Vec2(): x(0.0f), y(0.0f) {};
+        Vec2(float x, float y): x(x), y(y) {};
         
         // NON SELF-MODIFYING
-        Vector2 operator+(const Vector2& vec) const
+        Vec2 operator+(const Vec2& vec) const
         {
-            return Vector2(x + vec.x, y + vec.y);
+            return Vec2(x + vec.x, y + vec.y);
         }
 
-        Vector2 operator-(const Vector2& vec) const
+        Vec2 operator-(const Vec2& vec) const
         {
-            return Vector2(x - vec.x, y - vec.y);
+            return Vec2(x - vec.x, y - vec.y);
         }
 
-        Vector2 operator*(float t) const
+        Vec2 operator*(float t) const
         {
-            return Vector2(x * t, y * t);
+            return Vec2(x * t, y * t);
         }
-        Vector2 operator/(float t) const
+        Vec2 operator/(float t) const
         {
-            return Vector2(x / t, y / t);
+            return Vec2(x / t, y / t);
         }
 
-        Vector2 operator-() const
+        Vec2 operator-() const
         {
-            return Vector2(-x, -y);
+            return Vec2(-x, -y);
         }
 
         // SELF-MODIFYING
-        void operator+=(const Vector2 &vec)
+        void operator+=(const Vec2 &vec)
         {
             x += vec.x;
             y += vec.y;
         }
-        void operator-=(const Vector2 &vec)
+        void operator-=(const Vec2 &vec)
         {
             x -= vec.x;
             y -= vec.y;
@@ -56,14 +57,29 @@ namespace Volt
             y /= t;
         }
 
-        bool operator==(const Vector2 &v)
+        bool operator==(const Vec2 &v)
         {
             return x == v.x && y == v.y;
         }
-        bool operator!=(const Vector2 &v)
+        bool operator!=(const Vec2 &v)
         {
             return x != v.x || y != v.y;
         }
 
     };
+
+    inline float Distance(const Vec2& a, const Vec2& b)
+    {
+        float dx = b.x - a.x;
+        float dy = b.y - a.y;
+        return sqrt((dx*dx) + (dy*dy));
+    }
+
+    //Returns non sqrt distance
+    inline float DistanceCheap(const Vec2& a, const Vec2& b)
+    {
+        float dx = b.x - a.x;
+        float dy = b.y - a.y;
+        return (dx*dx) + (dy*dy);
+    }
 }

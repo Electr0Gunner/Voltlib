@@ -4,13 +4,13 @@ using namespace Volt;
 
 Window::Window(int width, int height, const std::string& title)
 {
-    m_Window = SDL_CreateWindow(title.c_str(), width, height, 0);
+    window = SDL_CreateWindow(title.c_str(), width, height, 0);
 
-    m_Renderer = SDL_CreateRenderer(m_Window, nullptr);
+    renderer = SDL_CreateRenderer(window, nullptr);
 }
 
 Window::~Window()
 {
-    SDL_DestroyRenderer(m_Renderer);
-    SDL_DestroyWindow(m_Window);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
 }

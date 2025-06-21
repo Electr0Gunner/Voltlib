@@ -7,11 +7,13 @@ namespace Volt
     class Component
     {
     public:
-        Entity* m_Owner = nullptr;
-        ~Component() = default;
+        Entity* owner = nullptr;
+        Component() {}
+        ~Component() {}
 
         virtual void Init() {}
         virtual void Start() {}
         virtual void Update() {}
+        virtual void Draw() {}
     };
 } // namespace Volt

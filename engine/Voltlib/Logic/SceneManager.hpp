@@ -10,7 +10,7 @@ namespace Volt
     class SceneManager
     {
     private:
-        std::vector<std::unique_ptr<Scene>> m_Scenes;
+        std::vector<std::unique_ptr<Scene>> scenes;
     public:
         SceneManager();
         ~SceneManager();
@@ -28,7 +28,7 @@ namespace Volt
             scene->Init();
             scene->Start();
             assert(scene != nullptr);
-            m_Scenes.emplace_back(std::move(scene));
+            scenes.emplace_back(std::move(scene));
             return ptr;
         }
 

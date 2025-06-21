@@ -7,10 +7,14 @@
 
 namespace Volt
 {
+    class Scene;
+    struct ColliderInfo;
+
     class Entity
     {
     public:
         std::unordered_map<std::type_index, std::unique_ptr<Component>> m_Components;
+        Scene* parentScene;
 
     public:
         template <typename T, typename... Args> T* AddComponent(Args&&... args)
@@ -19,7 +23,7 @@ namespace Volt
                 return component;
 
             auto component = std::make_unique<T>(std::forward<Args>(args)...);
-            component->m_Owner = this;
+            component->owner = this;
             T* ptr = component.get();
             m_Components[std::type_index(typeid(T))] = std::move(component);
             return ptr;
@@ -33,13 +37,39 @@ namespace Volt
             return nullptr;
         }
 
-        Entity() = default;
+        Entity(Scene* scene): parentScene(scene) {};
         virtual ~Entity() = default;
 
-        virtual void Init() {}
-        virtual void Start() {}
-        virtual void Update() {}
-        virtual void Draw() {}
+        virtual void Init()
+        {
+            for (auto& it: m_Components)
+            {
+                it.second->Init();
+            }
+        }
+        virtual void Start() 
+        {
+            for (auto& it: m_Components)
+            {
+                it.second->Start();
+            }
+        }
+        virtual void Update()
+        {
+            for (auto& it: m_Components)
+            {
+                it.second->Update();
+            }
+        }
+        virtual void Draw()
+        {
+            for (auto& it: m_Components)
+            {
+                it.second->Draw();
+            }
+        }
+
+        virtual void OnCollision(ColliderInfo* info) {}
     };
 
 } // namespace Volt

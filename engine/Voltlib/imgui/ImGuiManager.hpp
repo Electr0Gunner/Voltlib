@@ -14,7 +14,7 @@ namespace Volt
     public:
         using WindowFunction = std::function<void()>;
     private:
-        std::vector<WindowFunction> m_Windows;
+        std::vector<WindowFunction> windowFuncs;
     public:
         ImGuiManager();
 
@@ -26,7 +26,7 @@ namespace Volt
 
         inline void AddWindow(const WindowFunction &func)
         {
-            m_Windows.push_back(func);
+            windowFuncs.push_back(func);
         }
     };
 

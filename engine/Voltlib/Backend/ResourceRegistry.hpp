@@ -20,7 +20,7 @@ namespace Volt
     class ResourceRegistry
     {
     private:
-        std::map<std::string, Texture*> m_TextureMap;
+        std::map<std::string, Texture*> textureMap;
     public:
         ResourceRegistry(/* args */);
         ~ResourceRegistry();

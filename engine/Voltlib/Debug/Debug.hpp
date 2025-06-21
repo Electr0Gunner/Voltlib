@@ -13,10 +13,10 @@ namespace Volt
     void Log(LogType type, const char* file, int line, const char* fmt, ...);;
     void Assert(const char* expr, const char* file, int line, const char* msg = nullptr);
 
-    #define LOG_INFO(fmt, ...) Log(LogType::TYPE_INFO, __FILE__, __LINE__, fmt,##__VA_ARGS__)
-    #define LOG_WARN(fmt, ...) Log(LogType::TYPE_WARNING, __FILE__, __LINE__, fmt,##__VA_ARGS__)
-    #define LOG_ERROR(fmt, ...) Log(LogType::TYPE_ERROR, __FILE__, __LINE__, fmt,##__VA_ARGS__)
-    #define LOG_DEBUG(fmt, ...) Log(LogType::TYPE_DEBUG, __FILE__, __LINE__, fmt,##__VA_ARGS__)
+    #define LOG_INFO(fmt, ...) Volt::Log(Volt::LogType::TYPE_INFO, __FILE__, __LINE__, fmt,##__VA_ARGS__)
+    #define LOG_WARN(fmt, ...) Volt::Log(Volt::LogType::TYPE_WARNING, __FILE__, __LINE__, fmt,##__VA_ARGS__)
+    #define LOG_ERROR(fmt, ...) Volt::Log(Volt::LogType::TYPE_ERROR, __FILE__, __LINE__, fmt,##__VA_ARGS__)
+    #define LOG_DEBUG(fmt, ...) Volt::Log(Volt::LogType::TYPE_DEBUG, __FILE__, __LINE__, fmt,##__VA_ARGS__)
 
     #define ASSERT(expr) \
         ((expr) ? (void)0 : Volt::Assert(#expr, __FILE__, __LINE__))

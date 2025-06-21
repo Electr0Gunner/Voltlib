@@ -59,9 +59,9 @@ namespace Volt
     {
     //VARIABLES
     private:
-        SDL_Window* m_WindowBackend;
-        SDL_Renderer* m_RenderBackend;
-        SDL_Texture* m_RenderBuffer;
+        SDL_Window* windowBackend;
+        SDL_Renderer* rendererBackend;
+        SDL_Texture* renderBuffer;
 
 
     //FUNCTIONS
@@ -76,6 +76,12 @@ namespace Volt
 
         void Render();
 
+        static inline Renderer* Instance()
+        {
+            return s_Instance;
+        }
+
+        static Renderer* s_Instance;
         
     public://Functions related to drawing images, lines, etc
         void Draw(RenderCommand command);
@@ -97,6 +103,5 @@ namespace Volt
             return SDL_BLENDMODE_BLEND;
         }
     }
-
-    extern Renderer* g_Renderer;
+    
 }
